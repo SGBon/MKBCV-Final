@@ -87,3 +87,9 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+
+bank/*
+post/*
+!bank/dummy.txt
+!post/dummy.txt
