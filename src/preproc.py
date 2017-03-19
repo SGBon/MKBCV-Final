@@ -14,6 +14,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     root = args.dest
+    src = args.img
 
     # get directory delimiter based on os
     if os.name == 'nt':
@@ -23,7 +24,11 @@ if __name__ == '__main__':
     if root[len(root)-1] != dirdelim: # if the root argument doesn't have the delimiter for directory
         root = root + dirdelim
 
-    img = cv2.imread(args.img)
+    # keep just the filename of the image instead of entire path
+    tokens = src.split(dirdelim)
+    fname = tokens[-1]
+
+    img = cv2.imread(src)
     hsv = cv2.cvtColor(img,cv2.COLOR_BGR2HSV)
     h,s,v = cv2.split(hsv)
 
@@ -37,4 +42,4 @@ if __name__ == '__main__':
     except OSError: # directory exist from previous invocation, continue execution
         pass
 
-    cv2.imwrite(path+dirdelim+args.img,img)
+    cv2.imwrite(path+dirdelim+fname,img)
