@@ -1,4 +1,6 @@
 #bin/sh
+# gets images in the image bank and uses them as inputs to the python script
+# USAGE: preproc.sh [input folder] [output folder]
 BANK=$1 # image bank folder
 POST=$2 # post processed bank folder
 
