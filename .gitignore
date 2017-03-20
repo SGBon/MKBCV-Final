@@ -93,3 +93,4 @@ bank/*
 post/*
 !bank/dummy.txt
 !post/dummy.txt
+src/output.jpg

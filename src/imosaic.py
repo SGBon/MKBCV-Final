@@ -5,6 +5,19 @@ import cv2
 
 import argparse
 
+def lookup_tile_by_hsv(img):
+    return np.ones(img.shape)
+
+# produces a mosaic
+def create_mosiac(img, tilesize):
+    ret = np.zeros(img.shape)
+    for i in range(img.shape[0]/tilesize[0]):
+        for j in range(img.shape[1]/tilesize[1]):
+            current_subgrid = img[(tilesize[0]*i):(tilesize[0]*(i+1)), (tilesize[0]*j):(tilesize[0]*(j+1))]
+            ret[(tilesize[0]*i):(tilesize[0]*(i+1)), (tilesize[0]*j):(tilesize[0]*(j+1))] = current_subgrid
+
+    return ret
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Image Mosaic preprocessor')
     parser.add_argument('img', help='Image File')
@@ -17,10 +30,8 @@ if __name__ == '__main__':
     img = cv2.imread(args.img)
     hsv = cv2.cvtColor(img,cv2.COLOR_BGR2HSV)
     h,s,v = cv2.split(hsv)
-    bins = np.linspace(0,180,20)
-    print bins
+    bins = np.linspace(0,180,21).astype(int)
 
-    # iterate over every pixel
-    for hue in h:
-        # index the bins and look for image
-        print "implement lookup"
+    # mosaic & display
+    mosaiced = create_mosiac(img, [32,32])
+    cv2.imwrite("output.jpg", mosaiced)
