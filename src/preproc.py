@@ -5,8 +5,10 @@
 import cv2
 import numpy as np
 
-import argparse
 import os
+import imutil
+
+import argparse
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Image Mosaic preprocessor')
     parser.add_argument('img', help='Image File')
@@ -17,10 +19,7 @@ if __name__ == '__main__':
     src = args.img
 
     # get directory delimiter based on os
-    if os.name == 'nt':
-        dirdelim = '\\'
-    else:
-        dirdelim = '/'
+    dirdelim = imutil.dirdelim()
     if root[len(root)-1] != dirdelim: # if the root argument doesn't have the delimiter for directory
         root = root + dirdelim
 

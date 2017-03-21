@@ -3,10 +3,9 @@
 import numpy as np
 import cv2
 
-import argparse
+import imutil
 
-def lookup_tile_by_hsv(img):
-    return np.ones(img.shape)
+import argparse
 
 # produces a mosaic
 def create_mosiac(img, tilesize):
@@ -29,8 +28,8 @@ if __name__ == '__main__':
     # load image and convert to HSV
     img = cv2.imread(args.img)
     hsv = cv2.cvtColor(img,cv2.COLOR_BGR2HSV)
-    h,s,v = cv2.split(hsv)
-    bins = np.linspace(0,180,21).astype(int)
+
+    tile = imutil.lookup_tile_by_hsv(hsv[0][0],bank_root,(32,32))
 
     # mosaic & display
     mosaiced = create_mosiac(img, [32,32])
