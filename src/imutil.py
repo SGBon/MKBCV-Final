@@ -5,6 +5,11 @@ import numpy as np
 from scipy import spatial
 import cv2
 
+# get average cell value from image
+def get_average_hsv(hsv):
+    h,s,v = cv2.split(hsv)
+    return (np.mean(h), np.mean(s), np.mean(v))
+
 # get tile based on HSV
 # value - HSV value to use when retrieving image
 # bank - path to root directory to sorted images
@@ -13,9 +18,9 @@ def lookup_tile_by_hsv(hsv,bank,tilesize):
     tile = None
 
     # index the folder to test against
-    h = hsv[0]
+    hsv_mean = get_average_hsv(hsv)
     bins = np.linspace(0,180,21)
-    folder = str(int(bins[int(h/20)]))
+    folder = str(int(bins[int(hsv_mean[0]/20)]))
     path = bank + folder + dirdelim()
 
     # get listing of all the files at the indexed directory
@@ -28,12 +33,10 @@ def lookup_tile_by_hsv(hsv,bank,tilesize):
         h,s,v = cv2.split(tile_hsv)
 
         # get means, create vector, compute distance
-        mh = np.mean(h)
-        ms = np.mean(s)
-        mv = np.mean(v)
-        mean = (mh,ms,mv)
+        tile_mean = get_average_hsv(tile_hsv)
 
-        distance = spatial.distance.euclidean(mean,hsv)
+        #print "try '%s' with hsv %s an dmean %s" % (f, hsv, mean)
+        distance = spatial.distance.euclidean(tile_mean,hsv_mean)
         if distance < 40.0:
             break
     return tile
