@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 2.8)
+project( ImageMosaic )
+find_package( OpenCV REQUIRED )
+add_executable( ImageMosaic imosaic.cpp )
+target_link_libraries( ImageMosaic ${OpenCV_LIBS} )
