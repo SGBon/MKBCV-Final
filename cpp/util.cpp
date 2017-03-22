@@ -1,5 +1,7 @@
 #include "util.hpp"
 
+namespace imosaic {
+
 /* iterate over every character in string, every time a delimiter
  * is found, append the string between that delimeter and the delimiter
  * before
@@ -27,3 +29,4 @@ std::vector<std::string> tokenize(const std::string &str, const char delimiter){
 
   return tokens;
 }
+} // namespace imosaic

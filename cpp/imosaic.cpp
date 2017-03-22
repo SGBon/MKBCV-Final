@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <opencv2/opencv.hpp>
+#include "mosaicbuilder.hpp"
 
 int main(int argc, char **argv){
   if(argc != 2){
@@ -14,8 +15,14 @@ int main(int argc, char **argv){
     return -1;
   }
 
-  cv::namedWindow("Image",cv::WINDOW_AUTOSIZE);
-  cv::imshow("Image",image);
+  std::unordered_map<std::string, imosaic::ImageFeatures> queror;
+
+  const cv::Mat result = imosaic::createMosaic(image
+    , imosaic::UnorderedMap<std::string, imosaic::ImageFeatures>(queror)
+    , cv::Size(32,32));
+
+  cv::namedWindow("Result",cv::WINDOW_AUTOSIZE);
+  cv::imshow("Result",result);
 
   cv::waitKey(0);
 

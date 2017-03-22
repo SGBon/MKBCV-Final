@@ -12,3 +12,6 @@ if(OPENCL_FOUND)
   add_executable(im_preproc preprocessor.cpp util.cpp)
   target_link_libraries(im_preproc ${OpenCL_Libraries} ${OpenCV_LIBS})
 endif(OPENCL_FOUND)
+
+# c++ eleven things
+set_property(TARGET ImageMosaic PROPERTY CXX_STANDARD 11)
