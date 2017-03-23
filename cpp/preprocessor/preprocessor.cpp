@@ -7,7 +7,6 @@
 #include <stdio.h>
 #include <string>
 #include <opencv2/opencv.hpp>
-#include <CL/cl.h>
 
 #include "util.hpp"
 
@@ -21,7 +20,7 @@ int main(int argc, char **argv){
   std::string root(argv[2]);
 
   /* get just the filename of image */
-  std::vector<std::string> tokens = tokenize(filename,'/');
+  std::vector<std::string> tokens = imosaic::tokenize(filename,'/');
 
   for(unsigned int i = 0; i < tokens.size(); ++i){
     printf("%s\n",tokens[i].c_str());

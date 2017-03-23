@@ -5,6 +5,7 @@
 import cv2
 import numpy as np
 
+import sys
 import os
 import imutil
 
@@ -28,6 +29,10 @@ if __name__ == '__main__':
     fname = tokens[-1]
 
     img = cv2.imread(src)
+    if img is None:
+        print "Error: failed to load '%s'." % src
+        sys.exit(1)
+
     hsv = cv2.cvtColor(img,cv2.COLOR_BGR2HSV)
     h,s,v = cv2.split(hsv)
 
@@ -42,3 +47,10 @@ if __name__ == '__main__':
         pass
 
     cv2.imwrite(path+dirdelim+fname,img)
+    # write the feature vector to file
+    hm = np.mean(h)
+    sm = np.mean(s)
+    vm = np.mean(v)
+    with open(path+dirdelim+"meta.txt",'a') as f:
+        line = fname+","+str(hm)+","+str(sm)+","+str(vm)+"\n"
+        f.write(line)

@@ -4,6 +4,12 @@
 BANK=$1 # image bank folder
 POST=$2 # post processed bank folder
 
+if [ $# -lt 2 ]
+then
+  echo "USAGE: ./preproc.sh [input folder] [output folder]"
+  exit 1
+fi
+
 # iterate over every folder
 for DIR in $(ls $BANK)
 do
