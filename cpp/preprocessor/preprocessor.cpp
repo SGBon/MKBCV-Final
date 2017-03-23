@@ -7,7 +7,6 @@
 #include <stdio.h>
 #include <string>
 #include <opencv2/opencv.hpp>
-#include <CL/cl.h>
 
 #include "util.hpp"
 
