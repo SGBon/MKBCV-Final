@@ -1,14 +1,21 @@
 cmake_minimum_required(VERSION 2.8)
 project( ImageMosaic )
 
-find_package( OpenCV REQUIRED )
-add_executable( ImageMosaic imosaic.cpp )
-target_link_libraries( ImageMosaic ${OpenCV_LIBS} )
+# configure library for the common functions shared between executables
+set(COMMON_DIR "common")
+include_directories(${COMMON_DIR})
+add_subdirectory(${COMMON_DIR})
 
-find_package(OpenCL)
+# set up the image mosaic generator
+set(IMOSAIC_SRC imosaic.cpp)
+find_package( OpenCV REQUIRED )
+add_executable( ImageMosaic ${IMOSAIC_SRC} )
+target_link_libraries( ImageMosaic ${OpenCV_LIBS} ${COMMON_DIR})
+
+# configure preprocessor
+set(PREPROC_DIR "preprocessor")
+set(PREPROC_SRC ${PREPROC_DIR}/preprocessor.cpp)
 
 # only build preprocessor if opencl is setup on device
-if(OPENCL_FOUND)
-  add_executable(im_preproc preprocessor.cpp util.cpp)
-  target_link_libraries(im_preproc ${OpenCL_Libraries} ${OpenCV_LIBS})
-endif(OPENCL_FOUND)
+add_executable(im_preproc ${PREPROC_SRC})
+target_link_libraries(im_preproc ${OpenCV_LIBS} ${COMMON_DIR})
