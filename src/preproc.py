@@ -51,6 +51,6 @@ if __name__ == '__main__':
     hm = np.mean(h)
     sm = np.mean(s)
     vm = np.mean(v)
-    with open(path+dirdelim+"meta.txt",'a') as f:
+    with open(path+dirdelim+"meta.txt",'a+') as f:
         line = fname+","+str(hm)+","+str(sm)+","+str(vm)+"\n"
         f.write(line)

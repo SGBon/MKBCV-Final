@@ -7,7 +7,7 @@ include_directories(${COMMON_DIR})
 add_subdirectory(${COMMON_DIR})
 
 # set up the image mosaic generator
-set(IMOSAIC_SRC imosaic.cpp)
+set(IMOSAIC_SRC imosaic.cpp MetaFile.cpp)
 find_package( OpenCV REQUIRED )
 add_executable( ImageMosaic ${IMOSAIC_SRC} )
 target_link_libraries( ImageMosaic ${OpenCV_LIBS} ${COMMON_DIR})

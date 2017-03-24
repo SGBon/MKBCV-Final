@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <opencv2/opencv.hpp>
+#include "MetaFile.hpp"
 
 int main(int argc, char **argv){
-  if(argc != 2){
-    printf("usage: %s [Image File]\n",argv[0]);
+  if(argc != 3){
+    printf("usage: %s [Image File] [Image Bank]\n",argv[0]);
     return -1;
   }
 
@@ -13,6 +14,10 @@ int main(int argc, char **argv){
     printf("No image data\n");
     return -1;
   }
+
+  imosaic::MetaFile meta1(0,argv[2]);
+
+  meta1.print();
 
   cv::namedWindow("Image",cv::WINDOW_AUTOSIZE);
   cv::imshow("Image",image);
