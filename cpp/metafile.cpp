@@ -3,7 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstdio>
-#include "MetaFile.hpp"
+#include "metafile.hpp"
 #include "util.hpp"
 
 namespace imosaic{
