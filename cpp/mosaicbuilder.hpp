@@ -11,7 +11,6 @@ namespace imosaic {
 /// splits area into cells defined by 'tilesize'.
 /// If size % tilesize != 0, the extra area is discarded.
 /// When tilesize's area is zero, the entire field is returned.
-template<typename T>
 class UniformSplitter {
 private:
   cv::Size tilesize_;
@@ -25,15 +24,15 @@ public:
   }
 
 protected:
-  std::vector<T> split(cv::Size size) {
-    std::vector<T> list;
+  std::vector<cv::Rect2i> split(cv::Size size) {
+    std::vector<cv::Rect2i> list;
     cv::Size tilesize(tilesize_.area() == 0 ? cv::Size(1,1) : tilesize_);
     cv::Size cell_count(size.width/tilesize.width, size.height/tilesize.height);
     cv::Size offset(size.width - tilesize.width*cell_count.width, size.height - tilesize.height*cell_count.height);
     offset = offset/2;
     for(int i = 0; i < cell_count.height; i++) {
       for(int j = 0; j < cell_count.width; j++) {
-        list.push_back(T(offset.width + tilesize.width*j, offset.height + tilesize.height*i, tilesize.width
+        list.push_back(cv::Rect2i(offset.width + tilesize.width*j, offset.height + tilesize.height*i, tilesize.width
           , tilesize.height));
       }
     }
@@ -43,7 +42,6 @@ protected:
 
 /// splits area into cells defined by 'tilesize'.
 /// If size % tilesize != 0, certain cells are truncated.
-template<typename T>
 class NonUniformSplitter {
 private:
   cv::Size tilesize_;
@@ -57,8 +55,8 @@ public:
   }
 
 protected:
-  std::vector<T> split(cv::Size size) {
-    std::vector<T> list;
+  std::vector<cv::Rect2i> split(cv::Size size) {
+    std::vector<cv::Rect2i> list;
     cv::Size tilesize(tilesize_.area() == 0 ? cv::Size(1,1) : tilesize_);
     cv::Size cell_count(1+(size.width/tilesize.width), size.height/tilesize.height);
     cv::Size offset;
@@ -76,7 +74,7 @@ protected:
           if(cell_size.width == 0)
             continue;
         }
-        list.push_back(T(offset, cell_size));
+        list.push_back(cv::Rect2i(offset, cell_size));
         offset.width += cell_size.width;
       }
       offset.width = 0;
@@ -87,14 +85,14 @@ protected:
   }
 };
 
-template<template <typename> typename SplitterPolicy>
-class GridCutter : public SplitterPolicy<cv::Rect2i> {
+template<typename RectangleSplitterPolicy>
+class GridCutter : public RectangleSplitterPolicy {
 protected:
   ~GridCutter() {}
 protected:
   std::vector<cv::Mat> cutUp(const cv::Mat& mat) {
     std::vector<cv::Mat> cells;
-    std::vector<cv::Rect2i> subrects(SplitterPolicy<cv::Rect2i>::split(mat.size()));
+    std::vector<cv::Rect2i> subrects(RectangleSplitterPolicy::split(mat.size()));
     std::for_each(subrects.begin(), subrects.end(), [&cells, &mat]
       (cv::Rect2i roi) {
       cells.push_back(cv::Mat(mat, roi));

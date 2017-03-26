@@ -6,6 +6,7 @@ struct trackbar_data_t {
   const cv::Mat* orig_hsv;
   cv::Mat dest;
   std::string window;
+  int tile_length;
 };
 
 void buildMosaic(trackbar_data_t* trackbar_data, int tile_length) {
@@ -16,6 +17,8 @@ void buildMosaic(trackbar_data_t* trackbar_data, int tile_length) {
 }
 
 void onTrackbar(int tile_length, void* p_trackbar_data) {
+  if(tile_length < 8)
+    tile_length = 0;
   trackbar_data_t* trackbar_data = (trackbar_data_t*)p_trackbar_data;
   buildMosaic(trackbar_data, tile_length);
   cv::cvtColor(trackbar_data->dest, trackbar_data->dest, CV_HSV2BGR);
@@ -46,7 +49,6 @@ int main(int argc, char **argv){
   cv::createTrackbar("Threshold", trackbar_data.window
     , &tilesize, max_pixel_size
     , onTrackbar, &trackbar_data);
-  cv::setTrackbarMin("Threshold", trackbar_data.window, 8);
   onTrackbar(tilesize, &trackbar_data);
   cv::waitKey();
   return 0;
