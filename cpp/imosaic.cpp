@@ -20,6 +20,7 @@ int main(int argc, char **argv){
   imosaic::MetaFile meta1(0,argv[2]);
   meta1.print();
 
+  /* test queror */
   imosaic::Queror queror1(meta1);
   cv::Mat test(1,3,CV_32F);
   test.at<float>(0,0) = 60.0f;
