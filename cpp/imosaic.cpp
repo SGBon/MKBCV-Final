@@ -1,6 +1,4 @@
-#include <stdio.h>
-#include <opencv2/opencv.hpp>
-#include "mosaicbuilder.hpp"
+#include "imosaic.hpp"
 
 struct trackbar_data_t {
   const cv::Mat* orig_hsv;
@@ -26,7 +24,6 @@ void onTrackbar(int tile_length, void* p_trackbar_data) {
 }
 
 int main(int argc, char **argv){
-
   // Print usage if arguments are malformed
   if(argc != 2){
     printf("usage: %s [Image File]\n",argv[0]);
@@ -46,7 +43,7 @@ int main(int argc, char **argv){
   int tilesize = 16;
   int max_pixel_size = std::fmin(image.size().width, image.size().height)/2;
   cv::namedWindow(trackbar_data.window,cv::WINDOW_AUTOSIZE);
-  cv::createTrackbar("Threshold", trackbar_data.window
+  cv::createTrackbar("Tilesize", trackbar_data.window
     , &tilesize, max_pixel_size
     , onTrackbar, &trackbar_data);
   onTrackbar(tilesize, &trackbar_data);
