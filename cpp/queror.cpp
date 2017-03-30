@@ -1,4 +1,5 @@
 #include "queror.hpp"
+#include <cstdio>
 #include <opencv2/opencv.hpp>
 
 namespace imosaic{
@@ -8,9 +9,22 @@ namespace imosaic{
   Queror::Queror(const MetaFile &metafile):
   metafile_(metafile)
   {
-    matcher_.add(metafile.getFeatureVectors());
+    initializeMatcher();
+  }
+
+  Queror::Queror(const unsigned int bin, const std::string &filename):
+  metafile_(bin,filename)
+  {
+    initializeMatcher();
+  }
+
+  void Queror::initializeMatcher(){
+    matcher_.add(metafile_.getFeatureVectors());
     matcher_.train();
   }
+
+  Queror::~Queror(){}
+
 
   /* using the FLANN matcher, gets the first best match for the feature vector
    * and returns a query object which has the filename and distance of the best
@@ -28,9 +42,7 @@ namespace imosaic{
       printf("Matcher empty\n");
     }
 
-    printf("BEFORE MATCH\n");
     matcher_.match(featureVector,matches);
-    printf("AFTER MATCH\n");
 
     int row = matches[0].trainIdx;
     query.distance = matches[0].distance;

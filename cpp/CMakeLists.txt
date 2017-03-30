@@ -26,3 +26,7 @@ target_link_libraries(im_preproc ${OpenCV_LIBS} ${COMMON_DIR})
 set(METATEST_SRC test/metafiletest.cpp metafile.cpp queror.cpp)
 add_executable(MetafileTest ${METATEST_SRC})
 target_link_libraries(MetafileTest ${OpenCV_LIBS} ${COMMON_DIR})
+
+set(QUERORTEST_SRC test/querortest.cpp metafile.cpp queror.cpp)
+add_executable(QuerorTest ${QUERORTEST_SRC})
+target_link_libraries(QuerorTest ${OpenCV_LIBS} ${COMMON_DIR})

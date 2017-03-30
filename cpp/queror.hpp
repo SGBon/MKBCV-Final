@@ -26,6 +26,15 @@ namespace imosaic{
      */
     Queror(const MetaFile &metafile);
 
+    /* constructor that initializes metafile from filename
+     * bin: bin of metafile
+     * filename: path to metafile
+     */
+    Queror(const unsigned int bin, const std::string &filename);
+
+    /* deconstructor */
+    ~Queror();
+
     /* query a feature vector for the k-nearest neighbour
     * featureVector: input vector to find the k-nearest neighbour for
     * returns a query object associated with the k-nearest neighbour
@@ -35,6 +44,9 @@ namespace imosaic{
   private:
     cv::FlannBasedMatcher matcher_;
     MetaFile metafile_;
+
+    /* initializes the flann matcher */
+    void initializeMatcher();
   };
 } /* namespace imosaic */
 

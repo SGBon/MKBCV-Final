@@ -1,18 +1,21 @@
+/* test for queror class
+ * reads in all of the metafiles and queries a vector to each of them
+ */
+
 #include <cstdio>
 #include <opencv2/opencv.hpp>
-#include "metafile.hpp"
-#include "queror.hpp"
+#include "../queror.hpp"
 
 #define NUM_BINS (20)
 #define HUE_MAX (180)
 
 int main(int argc, char **argv){
-  if(argc != 3){
-    printf("usage: %s [Image File] [Image Bank]\n",argv[0]);
+  if(argc != 2){
+    printf("usage: %s [Image Bank]\n",argv[0]);
     return -1;
   }
 
-  std::string root(argv[2]);
+  std::string root(argv[1]);
 
   std::vector<imosaic::Queror *> querors;
 
@@ -25,17 +28,16 @@ int main(int argc, char **argv){
     querors.push_back(queror);
   }
 
-  const cv::Mat image = cv::imread(argv[1],1);
+  cv::Mat test(1,3,CV_32F);
+  test.at<float>(0,0) = 60.0f;
+  test.at<float>(0,1) = 120.0f;
+  test.at<float>(0,2) = 115.0f;
 
-  if(!image.data){
-    printf("No image data\n");
-    return -1;
+  for(unsigned int i = 0; i < querors.size();++i){
+    const unsigned int bin = i*(HUE_MAX/NUM_BINS);
+    imosaic::Query q = querors[i]->query(test);
+    printf("Best match in bin %u: %s with distance of %f\n",bin,q.filename.c_str(),q.distance);
   }
-
-  cv::namedWindow("Image",cv::WINDOW_AUTOSIZE);
-  cv::imshow("Image",image);
-
-  cv::waitKey(0);
 
   /* deallocate queror memory */
   for(unsigned int i = 0; i < querors.size();++i){
