@@ -20,7 +20,17 @@ namespace imosaic{
     Query query;
     std::vector<cv::DMatch> matches;
 
+    if(featureVector.empty()){
+      printf("feature vector empty\n");
+    }
+
+    if(matcher_.empty()){
+      printf("Matcher empty\n");
+    }
+
+    printf("BEFORE MATCH\n");
     matcher_.match(featureVector,matches);
+    printf("AFTER MATCH\n");
 
     int row = matches[0].trainIdx;
     query.distance = matches[0].distance;
