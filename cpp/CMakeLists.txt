@@ -8,8 +8,13 @@ add_subdirectory(${COMMON_DIR})
 
 ############ Mosaic Generator
 # set up the image mosaic generator
-set(IMOSAIC_SRC imosaic.cpp metafile.cpp queror.cpp)
-find_package( OpenCV REQUIRED )
+set(IMOSAIC_SRC imosaic.cpp metafile.cpp queror.cpp procon.cpp)
+find_package(OpenCV REQUIRED)
+find_package(OpenMP)
+if (OPENMP_FOUND)
+    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+endif()
 add_executable( ImageMosaic ${IMOSAIC_SRC} )
 target_link_libraries( ImageMosaic ${OpenCV_LIBS} ${COMMON_DIR})
 

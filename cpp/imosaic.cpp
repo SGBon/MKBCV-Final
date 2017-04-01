@@ -1,7 +1,9 @@
 #include <cstdio>
+#include <thread>
 #include <opencv2/opencv.hpp>
 #include "metafile.hpp"
 #include "queror.hpp"
+#include "procon.hpp"
 
 #define NUM_BINS (20)
 #define HUE_MAX (180)
@@ -31,6 +33,22 @@ int main(int argc, char **argv){
     printf("No image data\n");
     return -1;
   }
+
+  cv::Mat result(image.rows,image.cols,image.type());
+
+  std::deque<imosaic::ImageSegment> imageSegments;
+  std::mutex dequeMutex;
+  bool finished = false;
+
+  /*
+  std::thread consumer(imosaic::consumeImageSegments,std::ref(imageSegments),
+    std::ref(dequeMutex),std::ref(result),std::ref(finished));
+  */
+
+  std::thread producer(imosaic::produceImageSegments,std::ref(imageSegments),
+    std::ref(dequeMutex),std::cref(image), std::cref(querors), std::ref(finished));
+
+  producer.join();
 
   cv::namedWindow("Image",cv::WINDOW_AUTOSIZE);
   cv::imshow("Image",image);
