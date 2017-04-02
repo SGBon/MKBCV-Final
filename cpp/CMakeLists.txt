@@ -17,6 +17,7 @@ if (OPENMP_FOUND)
 endif()
 add_executable( ImageMosaic ${IMOSAIC_SRC} )
 target_link_libraries( ImageMosaic ${OpenCV_LIBS} ${COMMON_DIR})
+set_property(TARGET ImageMosaic PROPERTY CXX_STANDARD 11)
 
 ########### preprocessor
 # configure preprocessor
@@ -26,12 +27,15 @@ set(PREPROC_SRC ${PREPROC_DIR}/preprocessor.cpp)
 # only build preprocessor if opencl is setup on device
 add_executable(im_preproc ${PREPROC_SRC})
 target_link_libraries(im_preproc ${OpenCV_LIBS} ${COMMON_DIR})
+set_property(TARGET im_preproc PROPERTY CXX_STANDARD 11)
 
 ########## tests
 set(METATEST_SRC test/metafiletest.cpp metafile.cpp queror.cpp)
 add_executable(MetafileTest ${METATEST_SRC})
 target_link_libraries(MetafileTest ${OpenCV_LIBS} ${COMMON_DIR})
+set_property(TARGET MetafileTest PROPERTY CXX_STANDARD 11)
 
 set(QUERORTEST_SRC test/querortest.cpp metafile.cpp queror.cpp)
 add_executable(QuerorTest ${QUERORTEST_SRC})
 target_link_libraries(QuerorTest ${OpenCV_LIBS} ${COMMON_DIR})
+set_property(TARGET QuerorTest PROPERTY CXX_STANDARD 11)
