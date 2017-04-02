@@ -131,3 +131,6 @@ post/*
 src/output.jpg
 build/*
 !build/dummy.txt
+
+####### linter config
+.clang_complete
