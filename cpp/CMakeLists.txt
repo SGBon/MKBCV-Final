@@ -6,12 +6,12 @@ set(COMMON_DIR "common")
 include_directories(${COMMON_DIR})
 add_subdirectory(${COMMON_DIR})
 
-# set up the image mosaic generator
-set(IMOSAIC_SRC imosaic.cpp mosaicbuilder.cpp)
+# set up the trackbar demo
+set(IMOSAIC_SRC trackbar.cpp mosaicbuilder.cpp)
 find_package( OpenCV REQUIRED )
-add_executable( ImageMosaic ${IMOSAIC_SRC} )
-target_link_libraries( ImageMosaic ${OpenCV_LIBS} ${COMMON_DIR})
-set_property(TARGET ImageMosaic PROPERTY CXX_STANDARD 11)
+add_executable( Trackbar ${IMOSAIC_SRC} )
+target_link_libraries( Trackbar ${OpenCV_LIBS} ${COMMON_DIR})
+set_property(TARGET Trackbar PROPERTY CXX_STANDARD 11)
 
 # configure preprocessor
 set(PREPROC_DIR "preprocessor")
