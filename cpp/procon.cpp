@@ -38,7 +38,7 @@ namespace imosaic{
 
         cv::Mat image = cv::imread(currentSegment.filename);
 
-        printf("consuming: %s to place at (%u,%u)\n",currentSegment.filename.c_str(),currentSegment.x,currentSegment.y);
+        //printf("consuming: %s to place at (%u,%u)\n",currentSegment.filename.c_str(),currentSegment.x,currentSegment.y);
         /* TODO: place loaded image segment into result image */
       }
     }
@@ -76,7 +76,7 @@ namespace imosaic{
 
         query = querors[bin]->query(query_vector.t());
 
-        const std::string path(root + std::to_string(bin) + "/" + query.filename);
+        const std::string path(root + std::to_string(bin*9) + "/" + query.filename);
 
         const ImageSegment segment(path,x,y,tilewidth,tilewidth);
         /* critical section, push segment onto shared deque */
