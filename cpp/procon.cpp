@@ -47,11 +47,11 @@ namespace imosaic{
         // load image
         cv::Mat image(cv::imread(currentSegment.filename));
 
-        // (!) crops image instead of resize
-        cv::Mat image_sized(image, currentSegment.region);
-
         // put into dest
-        cells[currentSegment.index] = cv::mean(image_sized);
+        cv::Mat& dest = cells[currentSegment.index];
+        cv::Mat image_sized(dest.size(), dest.type());
+        cv::resize(image, image_sized, image_sized.size());
+        image_sized.copyTo(dest);
       }
     }
   }
