@@ -1,4 +1,4 @@
-#include "mosaicbuilder.hpp"
+#include "mosaicsplitter.hpp"
 
 namespace imosaic {
 void UniformSplitter::setTilesize(cv::Size tilesize) {
@@ -51,9 +51,5 @@ std::vector<cv::Rect2i> NonUniformSplitter::split(cv::Size size) {
   }
 
   return list;
-}
-
-void AverageTiler::replaceRegion(const cv::Mat& source, cv::Mat& dest) {
-  dest = cv::mean(source);
 }
 }

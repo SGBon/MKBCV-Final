@@ -6,8 +6,8 @@
   #define omp_get_thread_num() 0
 #endif
 #include "procon.hpp"
-#include "GridCutter.hpp"
-#include "mosaicbuilder.hpp"
+#include "mosaiccutter.hpp"
+#include "mosaicsplitter.hpp"
 
 namespace imosaic{
 

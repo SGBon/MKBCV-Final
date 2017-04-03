@@ -1,8 +1,8 @@
 /**
-* This is the data for creating the new image.
+* Policies for producing rectangular subregions.
 **/
-#ifndef IMOSAIC_MOSAIC_BUILDER_HPP
-#define IMOSAIC_MOSAIC_BUILDER_HPP
+#ifndef IMOSAIC_SPLITTER_HPP
+#define IMOSAIC_SPLITTER_HPP
 
 #include <opencv2/opencv.hpp>
 
@@ -40,14 +40,6 @@ public:
 protected:
   std::vector<cv::Rect2i> split(cv::Size size);
 };
-
-/// Assigns the average of source region to dest.
-class AverageTiler {
-protected:
-  ~AverageTiler() {}
-protected:
-  void replaceRegion(const cv::Mat& source, cv::Mat& dest);
-};
 }
 
-#endif //IMOSAIC_MOSAIC_BUILDER_HPP
+#endif //IMOSAIC_SPLITTER_HPP
