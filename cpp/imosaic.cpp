@@ -2,7 +2,6 @@
 #include <thread>
 #include <opencv2/opencv.hpp>
 #include "metafile.hpp"
-#include "queror.hpp"
 #include "procon.hpp"
 
 #define NUM_BINS (20)

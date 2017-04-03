@@ -11,11 +11,9 @@ namespace imosaic{
   /* image segment which gets produced/consumed */
   struct ImageSegment{
     std::string filename;
-    unsigned int x;
-    unsigned int y;
-    unsigned int width;
-    unsigned int height;
+    cv::Rect2i region;
 
+    ImageSegment(const std::string filename, cv::Rect2i region);
     ImageSegment(const std::string filename, unsigned int x, unsigned int y,
       unsigned int width, unsigned int height);
   };
@@ -42,6 +40,19 @@ namespace imosaic{
   void produceImageSegments(std::deque<ImageSegment> &imageSegments,
       std::mutex &dequeMutex, const cv::Mat &source,
       const std::vector<Queror *> &querors, bool &finished, const std::string &root);
+
+  /* callback function for producer master thread
+   * produces image data from source regions into shared deque with consumer
+   * imageSegments: dequeu shared with consumer from which to produce imagedata
+   * dequeMutex: synchronization primitive shared with consumer for the deque
+   * source: input image
+   * querors: queror array to query substitute images with
+   * finished: boolean shared with consumer signifying end of data
+   */
+  void produceImageSegmentsFromRegions(std::deque<ImageSegment> &imageSegments,
+      std::mutex &dequeMutex, const std::vector<cv::Mat> &source,
+      const std::vector<Queror *> &querors, bool &finished, const std::string &root);
+
 
 } // namespace imosaic
 #endif // header guard
