@@ -13,10 +13,22 @@
 
 namespace imosaic{
 
+/// I said I'd reduce hardcoding. And so, here is some reduced hardcoding.
+class ProconCutter : public GridCutter<UniformSplitter> {
+public:
+  ProconCutter() {
+    static const int tilesize = 16;
+    GridCutter::setTilesize(cv::Size(tilesize,tilesize));
+  }
+};
+
+
+  /// ctor
   ImageSegment::ImageSegment(const std::string filename, cv::Rect2i region):
     filename(filename),
     region(region){};
 
+  /// ctor
   ImageSegment::ImageSegment(const std::string filename, unsigned int x,
     unsigned int y, unsigned int width, unsigned int height):
     ImageSegment(filename, cv::Rect2i(x,y,width,height)){};
@@ -30,10 +42,8 @@ namespace imosaic{
   void consumeImageSegments(std::deque<ImageSegment> &imageSegments,
       std::mutex &dequeMutex, cv::Mat &result, bool &finished)
   {
-    // matches default behaviour below. Y'know.
-    const int tilewidth = 8;
-    Mosaic<GridCutter<UniformSplitter>, NoFill> gridCutter;
-    gridCutter.setTilesize(cv::Size(tilewidth,tilewidth));
+    // let's get some cells.
+    ProconCutter gridCutter;
     std::vector<cv::Mat> cells = gridCutter.cutUp(result);
 
     while(!finished || !imageSegments.empty()){
@@ -104,9 +114,7 @@ void produceImageSegmentsFromRegions(std::deque<ImageSegment> &imageSegments,
        std::mutex &dequeMutex, const cv::Mat &source,
        const std::vector<Queror *> &querors, bool &finished, const std::string &root)
   {
-    const int tilewidth = 8;
-    Mosaic<GridCutter<UniformSplitter>, NoFill> gridCutter;
-    gridCutter.setTilesize(cv::Size(tilewidth,tilewidth));
+    ProconCutter gridCutter;
     const std::vector<cv::Mat> cells = gridCutter.cutUp(source);
     produceImageSegmentsFromRegions(imageSegments, dequeMutex, cells, querors, finished, root);
   }

@@ -56,17 +56,24 @@ int main(int argc, char **argv){
   cv::namedWindow("Image",cv::WINDOW_AUTOSIZE);
   cv::imshow("Image", result);
 
+  // print out image
+  cv::imwrite("output.jpg", result);
+  printf("Wrote result to 'output.jpg'\n");
+
   while(true) {
   int key = cv::waitKey(33);
   if(key == 27)
     break;
   }
-
+  cv::destroyWindow("Image");
+  
   /* deallocate queror memory */
   for(unsigned int i = 0; i < querors.size();++i){
     delete querors[i];
   }
   querors.clear();
 
+
+  // done
   return 0;
 }
