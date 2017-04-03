@@ -48,10 +48,8 @@ namespace imosaic{
           image = cv::imread(currentSegment.filename);
           cv::resize(image,image,cv::Size(currentSegment.width,currentSegment.height));
           preloaded[currentSegment.filename] = image;
-          printf("Placing %s into map\n",currentSegment.filename.c_str());
         }else{
           image = finder->second;
-          printf("Retrieving %s from map\n",currentSegment.filename.c_str());
         }
 
         //printf("consuming: %s to place at (%u,%u)\n",currentSegment.filename.c_str(),currentSegment.x,currentSegment.y);
