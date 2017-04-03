@@ -13,6 +13,10 @@ namespace imosaic{
     std::string filename;
     cv::Rect2i region;
 
+    // We take it for granted that the source and destination lists are indexed
+    // in such a way that they correspond to each other.
+    unsigned int index;
+
     ImageSegment(const std::string filename, cv::Rect2i region);
     ImageSegment(const std::string filename, unsigned int x, unsigned int y,
       unsigned int width, unsigned int height);

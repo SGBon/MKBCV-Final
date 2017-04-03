@@ -54,7 +54,7 @@ int main(int argc, char **argv){
   consumer.join();
 
   cv::namedWindow("Image",cv::WINDOW_AUTOSIZE);
-  cv::imshow("Image",image);
+  cv::imshow("Image", result);
 
   cv::waitKey(0);
 

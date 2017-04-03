@@ -30,6 +30,12 @@ namespace imosaic{
   void consumeImageSegments(std::deque<ImageSegment> &imageSegments,
       std::mutex &dequeMutex, cv::Mat &result, bool &finished)
   {
+    // matches default behaviour below. Y'know.
+    const int tilewidth = 8;
+    Mosaic<GridCutter<UniformSplitter>, NoFill> gridCutter;
+    gridCutter.setTilesize(cv::Size(tilewidth,tilewidth));
+    std::vector<cv::Mat> cells = gridCutter.cutUp(result);
+
     while(!finished || !imageSegments.empty()){
       if(!imageSegments.empty()){
         /* critical section, reading an image segment from dequeue */
@@ -38,10 +44,14 @@ namespace imosaic{
         imageSegments.pop_front();
         dequeMutex.unlock();
 
-        cv::Mat image = cv::imread(currentSegment.filename);
+        // load image
+        cv::Mat image(cv::imread(currentSegment.filename));
 
-        //printf("consuming: %s to place at (%u,%u)\n",currentSegment.filename.c_str(),currentSegment.x,currentSegment.y);
-        /* TODO: place loaded image segment into result image */
+        // (!) crops image instead of resize
+        cv::Mat image_sized(image, currentSegment.region);
+
+        // put into dest
+        cells[currentSegment.index] = cv::mean(image_sized);
       }
     }
   }
@@ -70,7 +80,8 @@ void produceImageSegmentsFromRegions(std::deque<ImageSegment> &imageSegments,
 
       const std::string path(root + std::to_string(bin*9) + "/" + query.filename);
 
-      const ImageSegment segment(path,0,0,cells[i].size().width, cells[i].size().height);
+      ImageSegment segment(path,0,0,cells[i].size().width, cells[i].size().height);
+      segment.index = i;
       /* critical section, push segment onto shared deque */
       dequeMutex.lock();
       {
