@@ -41,7 +41,7 @@ namespace imosaic{
     if(matcher_.empty()){
       printf("Matcher empty\n");
     }
-
+    
     matcher_.match(featureVector,matches);
 
     int row = matches[0].trainIdx;

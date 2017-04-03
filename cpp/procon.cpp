@@ -1,12 +1,24 @@
 #include <cstdio>
+#include <string>
 #ifdef _OPENMP
   #include <omp.h>
 #else
   #define omp_get_thread_num() 0
 #endif
 #include "procon.hpp"
+#include "GridCutter.hpp"
+#include "mosaicbuilder.hpp"
 
 namespace imosaic{
+
+  ImageSegment::ImageSegment(const std::string filename, unsigned int x,
+    unsigned int y, unsigned int width, unsigned int height):
+    filename(filename),
+    x(x),
+    y(y),
+    width(width),
+    height(height){};
+
   /* consume image segments from dequeue. On consumption, an image is loaded from
    * the path specified by the image segment and placed into the resulting image
    * with the x and y parameters of the image segment
@@ -16,7 +28,7 @@ namespace imosaic{
   void consumeImageSegments(std::deque<ImageSegment> &imageSegments,
       std::mutex &dequeMutex, cv::Mat &result, bool &finished)
   {
-    while(!finished && !imageSegments.empty()){
+    while(!finished || !imageSegments.empty()){
       if(!imageSegments.empty()){
         /* critical section, reading an image segment from dequeue */
         dequeMutex.lock();
@@ -26,7 +38,7 @@ namespace imosaic{
 
         cv::Mat image = cv::imread(currentSegment.filename);
 
-        printf("consuming:%s to place at (%u,%u)\n",currentSegment.filename.c_str(),currentSegment.x,currentSegment.y);
+        printf("consuming: %s to place at (%u,%u)\n",currentSegment.filename.c_str(),currentSegment.x,currentSegment.y);
         /* TODO: place loaded image segment into result image */
       }
     }
@@ -40,20 +52,39 @@ namespace imosaic{
    */
    void produceImageSegments(std::deque<ImageSegment> &imageSegments,
        std::mutex &dequeMutex, const cv::Mat &source,
-       const std::vector<Queror *> &querors, bool &finished)
+       const std::vector<Queror *> &querors, bool &finished, const std::string &root)
   {
-    const unsigned int rdim = source.rows;
-    const unsigned int cdim = source.cols;
-
-    const unsigned int step = 4;
+    const int tilewidth = 8;
+    imosaic::GridCutter<UniformSplitter> gridCutter;
+    gridCutter.setTilesize(cv::Size(tilewidth,tilewidth));
+    const std::vector<cv::Mat> cells = gridCutter.cutUp(source);
 
     #pragma omp parallel
     {
-      #pragma omp for collapse(2)
-      for (unsigned int r = 0; r < rdim; r += step){
-        for(unsigned int c = 0; c < cdim; c += step){
-          printf("Producing segment for (%u,%u)\n",r,c);
+      #pragma omp for
+      for (unsigned int i = 0; i < cells.size(); ++i){
+        const int x = i % source.cols;
+        const int y = (i - x) / source.cols;
+        const cv::Mat mean(cv::mean(cells[i]));
+        cv::Mat other;
+        mean.convertTo(other,CV_32F);
+
+        const cv::Mat query_vector = other.rowRange(0,3);
+        const unsigned int bin = query_vector.at<float>(0,0) / 9.0;
+
+        Query query;
+
+        query = querors[bin]->query(query_vector.t());
+
+        const std::string path(root + std::to_string(bin) + "/" + query.filename);
+
+        const ImageSegment segment(path,x,y,tilewidth,tilewidth);
+        /* critical section, push segment onto shared deque */
+        dequeMutex.lock();
+        {
+          imageSegments.push_back(segment);
         }
+        dequeMutex.unlock();
       }
     }
 

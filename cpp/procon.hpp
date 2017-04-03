@@ -3,6 +3,7 @@
 
 #include <mutex>
 #include <deque>
+#include <string>
 #include <opencv2/opencv.hpp>
 #include "queror.hpp"
 
@@ -12,12 +13,17 @@ namespace imosaic{
     std::string filename;
     unsigned int x;
     unsigned int y;
+    unsigned int width;
+    unsigned int height;
+
+    ImageSegment(const std::string filename, unsigned int x, unsigned int y,
+      unsigned int width, unsigned int height);
   };
 
   /* callback function for consumer thread.
    * consumes image data sent from a producer thread
    * and loads images into the result matrix.
-   * imageSegments: dequeu shared with producers from which to consume imagedata
+   * imageSegments: deque shared with producers from which to consume imagedata
    * dequeMutex: synchronization primitive shared with producers for the deque
    * result: output image
    * finished: boolean shared with producers signifying end of data
@@ -35,7 +41,7 @@ namespace imosaic{
    */
   void produceImageSegments(std::deque<ImageSegment> &imageSegments,
       std::mutex &dequeMutex, const cv::Mat &source,
-      const std::vector<Queror *> &querors, bool &finished);
+      const std::vector<Queror *> &querors, bool &finished, const std::string &root);
 
 } // namespace imosaic
 #endif // header guard

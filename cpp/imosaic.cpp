@@ -34,21 +34,25 @@ int main(int argc, char **argv){
     return -1;
   }
 
+  cv::Mat hsv;
+  cv::cvtColor(image,hsv,CV_BGR2HSV);
+
   cv::Mat result(image.rows,image.cols,image.type());
 
   std::deque<imosaic::ImageSegment> imageSegments;
   std::mutex dequeMutex;
   bool finished = false;
 
-  /*
+
   std::thread consumer(imosaic::consumeImageSegments,std::ref(imageSegments),
     std::ref(dequeMutex),std::ref(result),std::ref(finished));
-  */
+
 
   std::thread producer(imosaic::produceImageSegments,std::ref(imageSegments),
-    std::ref(dequeMutex),std::cref(image), std::cref(querors), std::ref(finished));
+    std::ref(dequeMutex),std::cref(hsv), std::cref(querors), std::ref(finished),std::cref(root));
 
   producer.join();
+  consumer.join();
 
   cv::namedWindow("Image",cv::WINDOW_AUTOSIZE);
   cv::imshow("Image",image);
