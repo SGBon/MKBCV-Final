@@ -2,7 +2,6 @@
 #include <thread>
 #include <opencv2/opencv.hpp>
 #include "metafile.hpp"
-#include "queror.hpp"
 #include "procon.hpp"
 
 #define NUM_BINS (20)
@@ -43,6 +42,8 @@ int main(int argc, char **argv){
   std::mutex dequeMutex;
   bool finished = false;
 
+  // get interval start
+  int64 interval_start = cv::getTickCount();
 
   std::thread consumer(imosaic::consumeImageSegments,std::ref(imageSegments),
     std::ref(dequeMutex),std::ref(result),std::ref(finished));
@@ -54,10 +55,22 @@ int main(int argc, char **argv){
   producer.join();
   consumer.join();
 
-  cv::namedWindow("Image",cv::WINDOW_AUTOSIZE);
-  cv::imshow("Image",image);
+  int64 interval_end = cv::getTickCount();
+  printf("Created mosaic in %.8fs\n", (interval_end-interval_start)/cv::getTickFrequency());
 
-  cv::waitKey(0);
+  cv::namedWindow("Image",cv::WINDOW_AUTOSIZE);
+  cv::imshow("Image", result);
+
+  // print out image
+  cv::imwrite("output.jpg", result);
+  printf("Wrote result to 'output.jpg'\n");
+
+  while(true) {
+  int key = cv::waitKey(33);
+  if(key == 27)
+    break;
+  }
+  cv::destroyWindow("Image");
 
   /* deallocate queror memory */
   for(unsigned int i = 0; i < querors.size();++i){
@@ -65,5 +78,7 @@ int main(int argc, char **argv){
   }
   querors.clear();
 
+
+  // done
   return 0;
 }

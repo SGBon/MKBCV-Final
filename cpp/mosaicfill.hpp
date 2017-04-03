@@ -14,6 +14,14 @@ protected:
 protected:
   void replaceRegion(const cv::Mat& source, cv::Mat& dest);
 };
+
+// Wow! This doesn't do anything! Wow!
+class NoFill {
+protected:
+  ~NoFill() {}
+protected:
+  void replaceRegion(const cv::Mat& source, cv::Mat& dest) {}
+};
 }
 
 #endif //IMOSAIC_MOSAIC_FILL_HPP

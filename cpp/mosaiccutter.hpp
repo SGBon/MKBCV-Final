@@ -10,8 +10,9 @@ namespace imosaic {
 ///   divides area defined by cv::Size into subrectangles.
 template<typename RectangleSplitterPolicy>
 class GridCutter : public RectangleSplitterPolicy {
+protected:
+    ~GridCutter() {}
 public:
-  ~GridCutter() {}
   std::vector<cv::Mat> cutUp(const cv::Mat& mat) {
     std::vector<cv::Mat> cells;
     std::vector<cv::Rect2i> subrects(RectangleSplitterPolicy::split(mat.size()));
