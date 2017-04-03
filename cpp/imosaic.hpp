@@ -3,7 +3,7 @@
 
 #include "mosaicsplitter.hpp"
 #include "mosaiccutter.hpp"
-#include "mosaictiler.hpp"
+#include "mosaicfill.hpp"
 #include "mosaic.hpp"
 
 #endif //IMOSAIC_IMOSAIC_HPP

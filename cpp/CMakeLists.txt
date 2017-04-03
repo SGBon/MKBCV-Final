@@ -7,7 +7,7 @@ include_directories(${COMMON_DIR})
 add_subdirectory(${COMMON_DIR})
 
 # set up the trackbar demo
-set(TRACKBAR_SRC trackbar.cpp mosaictiler.cpp mosaicsplitter.cpp)
+set(TRACKBAR_SRC trackbar.cpp mosaicfill.cpp mosaicsplitter.cpp)
 find_package( OpenCV REQUIRED )
 add_executable( Trackbar ${TRACKBAR_SRC} )
 target_link_libraries( Trackbar ${OpenCV_LIBS} ${COMMON_DIR})
@@ -15,7 +15,7 @@ set_property(TARGET Trackbar PROPERTY CXX_STANDARD 11)
 
 ############ Mosaic Generator
 # set up the image mosaic generator
-set(IMOSAIC_SRC imosaic.cpp metafile.cpp queror.cpp procon.cpp mosaictiler.cpp mosaicsplitter.cpp)
+set(IMOSAIC_SRC imosaic.cpp metafile.cpp queror.cpp procon.cpp mosaicfill.cpp mosaicsplitter.cpp)
 find_package(OpenCV REQUIRED)
 find_package(OpenMP)
 if (OPENMP_FOUND)

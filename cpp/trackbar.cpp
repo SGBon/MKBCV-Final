@@ -9,7 +9,7 @@ struct trackbar_data_t {
 
 void buildMosaic(trackbar_data_t* trackbar_data, int tile_length) {
   using namespace imosaic;
-  Mosaic<GridCutter<NonUniformSplitter>, AverageTiler> mosaic;
+  Mosaic<GridCutter<NonUniformSplitter>, AverageFill> mosaic;
   mosaic.setTilesize(cv::Size(tile_length,tile_length));
   mosaic.build(*trackbar_data->orig_hsv, &trackbar_data->dest);
 }

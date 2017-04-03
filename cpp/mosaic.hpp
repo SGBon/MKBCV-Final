@@ -8,13 +8,17 @@ namespace imosaic {
 /// CutterPolicy:
 ///   Defines a function 'std::vector<cv::Mat> cutUp(const cv::Mat&)'
 ///   to split up an image into regions.
+/// FillPolicy:
+///   Defines a function 'void replaceRegion(const cv::Mat& source, cv::Mat&
+///     destination) which uses information in lhs to
+///     write to rhs; creating the mosaic effect.
 /// TilerPolicy:
-///   Defines a function 'void replaceRegion(const cv::Mat& lhs, cv::Mat& rhs)'
-///   which uses information in lhs to write to rhs; creating the mosaic effect.
-///   ([!] Maybe a feature vector and rect would be better for lhs...)
-///
-template <typename CutterPolicy, typename TilerPolicy>
-class Mosaic : public CutterPolicy, public TilerPolicy  {
+///   Defines a function 'void replaceAll(const std::vector<cv::Mat>& source
+///   , std::vector<cv::Mat>& destination)
+///   Which defines how to apply a fill policy across all mats.
+///   ... potentially.
+template <typename CutterPolicy, typename FillPolicy>
+class Mosaic : public CutterPolicy, public FillPolicy  {
 public:
   void build(const cv::Mat& source_hsv, cv::Mat* dest_hsv) {
     *dest_hsv = 0;
@@ -22,7 +26,7 @@ public:
     std::vector<cv::Mat> source_regions(CutterPolicy::cutUp(source_hsv));
     size_t size = dest_regions.size();
     for(int i = 0; i < size; i++) {
-      TilerPolicy::replaceRegion(source_regions[i], dest_regions[i]);
+      FillPolicy::replaceRegion(source_regions[i], dest_regions[i]);
     }
   }
 };
