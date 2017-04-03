@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <string>
+#include <unordered_map>
 #ifdef _OPENMP
   #include <omp.h>
 #else
@@ -28,6 +29,8 @@ namespace imosaic{
   void consumeImageSegments(std::deque<ImageSegment> &imageSegments,
       std::mutex &dequeMutex, cv::Mat &result, bool &finished)
   {
+    /* preloaded images to forgo having to read from disk */
+    std::unordered_map<std::string,cv::Mat> preloaded;
     while(!finished || !imageSegments.empty()){
       if(!imageSegments.empty()){
         /* critical section, reading an image segment from dequeue */
@@ -36,7 +39,20 @@ namespace imosaic{
         imageSegments.pop_front();
         dequeMutex.unlock();
 
-        cv::Mat image = cv::imread(currentSegment.filename);
+        /* load image, first check if it's not yet loaded then load from file otherwise
+         * load from map
+         */
+        cv::Mat image;
+        std::unordered_map<std::string,cv::Mat>::iterator finder = preloaded.find(currentSegment.filename);
+        if(finder == preloaded.end()){
+          image = cv::imread(currentSegment.filename);
+          cv::resize(image,image,cv::Size(currentSegment.width,currentSegment.height));
+          preloaded[currentSegment.filename] = image;
+          printf("Placing %s into map\n",currentSegment.filename.c_str());
+        }else{
+          image = finder->second;
+          printf("Retrieving %s from map\n",currentSegment.filename.c_str());
+        }
 
         //printf("consuming: %s to place at (%u,%u)\n",currentSegment.filename.c_str(),currentSegment.x,currentSegment.y);
         /* TODO: place loaded image segment into result image */
