@@ -56,7 +56,11 @@ int main(int argc, char **argv){
   cv::namedWindow("Image",cv::WINDOW_AUTOSIZE);
   cv::imshow("Image", result);
 
-  cv::waitKey(0);
+  while(true) {
+  int key = cv::waitKey(33);
+  if(key == 27)
+    break;
+  }
 
   /* deallocate queror memory */
   for(unsigned int i = 0; i < querors.size();++i){
