@@ -41,7 +41,7 @@ public:
    * that there is no more image data to process (the condition of the while loop)
    */
   void consumeImageSegments(std::deque<ImageSegment> &imageSegments,
-      std::mutex &dequeMutex, cv::Mat &result, bool &finished)
+      std::mutex &dequeMutex, cv::Mat &result, std::atomic_bool &finished)
   {
     /* preloaded images to forgo having to read from disk */
     std::unordered_map<std::string,cv::Mat> preloaded;
@@ -81,7 +81,7 @@ public:
 
 void produceImageSegmentsFromRegions(std::deque<ImageSegment> &imageSegments,
     std::mutex &dequeMutex, const std::vector<cv::Mat> &cells,
-    const std::vector<Queror *> &querors, bool &finished
+    const std::vector<Queror *> &querors, std::atomic_bool &finished
     , const std::string &root) {
   #pragma omp parallel
   {
@@ -112,7 +112,6 @@ void produceImageSegmentsFromRegions(std::deque<ImageSegment> &imageSegments,
       dequeMutex.unlock();
     }
   }
-
   finished = true;
 }
 
@@ -124,7 +123,7 @@ void produceImageSegmentsFromRegions(std::deque<ImageSegment> &imageSegments,
    */
    void produceImageSegments(std::deque<ImageSegment> &imageSegments,
        std::mutex &dequeMutex, const cv::Mat &source,
-       const std::vector<Queror *> &querors, bool &finished, const std::string &root)
+       const std::vector<Queror *> &querors, std::atomic_bool &finished, const std::string &root)
   {
     ProconCutter gridCutter;
     const std::vector<cv::Mat> cells = gridCutter.cutUp(source);

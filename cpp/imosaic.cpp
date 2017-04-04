@@ -40,7 +40,7 @@ int main(int argc, char **argv){
 
   std::deque<imosaic::ImageSegment> imageSegments;
   std::mutex dequeMutex;
-  bool finished = false;
+  std::atomic_bool finished(false);
 
   // get interval start
   int64 interval_start = cv::getTickCount();

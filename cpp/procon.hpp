@@ -2,6 +2,7 @@
 #define IMOSAIC_PROCON_HPP
 
 #include <mutex>
+#include <atomic>
 #include <deque>
 #include <string>
 #include <opencv2/opencv.hpp>
@@ -31,7 +32,7 @@ namespace imosaic{
    * finished: boolean shared with producers signifying end of data
    */
   void consumeImageSegments(std::deque<ImageSegment> &imageSegments,
-      std::mutex &dequeMutex, cv::Mat &result, bool &finished);
+      std::mutex &dequeMutex, cv::Mat &result, std::atomic_bool &finished);
 
   /* callback function for producer master thread
    * produces image data from source matrix into shared deque with consumer
@@ -43,7 +44,7 @@ namespace imosaic{
    */
   void produceImageSegments(std::deque<ImageSegment> &imageSegments,
       std::mutex &dequeMutex, const cv::Mat &source,
-      const std::vector<Queror *> &querors, bool &finished, const std::string &root);
+      const std::vector<Queror *> &querors, std::atomic_bool &finished, const std::string &root);
 
   /* callback function for producer master thread
    * produces image data from source regions into shared deque with consumer
@@ -55,7 +56,7 @@ namespace imosaic{
    */
   void produceImageSegmentsFromRegions(std::deque<ImageSegment> &imageSegments,
       std::mutex &dequeMutex, const std::vector<cv::Mat> &source,
-      const std::vector<Queror *> &querors, bool &finished, const std::string &root);
+      const std::vector<Queror *> &querors, std::atomic_bool &finished, const std::string &root);
 
 
 } // namespace imosaic
