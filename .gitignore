@@ -131,6 +131,8 @@ post/*
 src/output.jpg
 build/*
 !build/dummy.txt
+metrics/metrics_*.txt
+metrics/output.jpg
 
 ####### linter config
 .clang_complete
