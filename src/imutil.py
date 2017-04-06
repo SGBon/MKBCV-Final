@@ -28,6 +28,9 @@ def lookup_tile_by_hsv(hsv,bank,tilesize):
 
     # iterate over every file, compare mean hsv of loaded images to source hsv
     for f in files:
+        tile = cv2.imread(path+f)
+        if(tile is None):
+            continue
         tile = cv2.resize(cv2.imread(path+f),tilesize)
         tile_hsv = cv2.cvtColor(tile,cv2.COLOR_BGR2HSV)
         h,s,v = cv2.split(tile_hsv)

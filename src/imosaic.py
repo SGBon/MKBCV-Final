@@ -3,6 +3,7 @@
 import numpy as np
 import cv2
 
+import sys
 import imutil
 
 import argparse
@@ -27,6 +28,9 @@ if __name__ == '__main__':
 
     # load image and convert to HSV
     img = cv2.imread(args.img)
+    if(img is None):
+        print "Failed to load %s" % args.img
+        sys.exit(1)
     hsv = cv2.cvtColor(img,cv2.COLOR_BGR2HSV)
 
     #tile = imutil.lookup_tile_by_hsv(hsv[0][0],bank_root,(32,32))
