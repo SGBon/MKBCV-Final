@@ -4,6 +4,13 @@ McKay-Bonada final project for Computer Vision course at UOIT.
 # Project
 This is a project using openCV and openMP to create image mosaics.
 
+# Drivers
+ImageMosaic
+  The main program that takes a bank directory and an image to make a mosaic.
+
+Trackbar
+  This is a demo with a slidebar. I believe it's expecting a file called 'download.jpg' in the root directory up here though...
+
 # Image Mosaic
 Mosaics are a form of art where larger images are built from many smaller images. We wrote a script to preprocess images to bins so that they are quicker to lookup. The script takes the HSV of an image, constructs a histogram of the hue values, and places the image into the folder representing the range of hue that it falls into. Preprocessor previously only “sorted” images into bins
 Now we also create an index for each hue bin called a metafile which contains pre-computed feature vectors for substitute images.
